@@ -1,0 +1,90 @@
+version: "3.1"
+
+intents:
+  - greet
+  - goodbye
+  - affirm
+  - deny
+  - mood_great
+  - mood_unhappy
+  - bot_challenge
+  - buy_pizza
+  - inform
+
+entities:
+  - pizza_size
+  - pizza_type
+
+slots:
+  pizza_size:
+    type: text
+    influence_conversation: true
+    mappings:
+    - type: from_entity
+      entity: pizza_size
+      conditions: # only detected pizza sizes when form is active
+      - active_loop: simple_pizza_form
+        requested_slot: pizza_size
+      
+  pizza_type:
+    type: text
+    influence_conversation: true
+    mappings:
+    - type: from_entity
+      entity: pizza_type
+      conditions:
+      - active_loop: simple_pizza_form
+        requested_slot: pizza_type
+
+forms:
+  simple_pizza_form:
+    required_slots:
+    - pizza_size
+    - pizza_type
+
+responses:
+  utter_greet:
+  - text: "Hey! How are you?"
+
+  utter_cheer_up:
+  - text: "Here is something to cheer you up:"
+    image: "https://i.imgur.com/nGF1K8f.jpg"
+
+  utter_did_that_help:
+  - text: "Did that help you?"
+
+  utter_happy:
+  - text: "Great, carry on!"
+
+  utter_goodbye:
+  - text: "Bye"
+
+  utter_iamabot:
+  - text: "I am a bot, powered by Rasa."
+
+  utter_submit:
+  - text: " I will now order a pizza for you"
+
+  utter_pizza_slots:
+  - text: " I will order a {pizza_size} {pizza_type} pizza for you"
+
+  utter_ask_continue:
+  - text: "Are you sure you want to stop the form"
+
+  utter_ask_pizza_size:
+  - text: "what size would you like your pizza to be?"
+
+  utter_ask_pizza_type:
+  - text: "what kind of pizza would you like to buy?"
+
+actions:
+- utter_ask_continue
+- utter_goodbye
+- utter_greet
+- utter_submit
+- utter_pizza_slots
+- validate_simple_pizza_form
+
+session_config:
+  session_expiration_time: 60
+  carry_over_slots_to_new_session: true
